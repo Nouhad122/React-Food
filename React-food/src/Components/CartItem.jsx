@@ -1,15 +1,20 @@
-import React from 'react'
+import React from 'react';
+import { currencyFormatter } from '../util/formatter';
 
-const CartItems = ({}) => {
+const CartItem = ({name, price, quantity, onIncrease, onDecrease}) => {
   return (
-    <div>
-       {
-            cartCtxt.items.map(item =>{
-                <p>{item.name} - {currencyFormatter.format(item.price)}</p>
-            })
-        }
-    </div>
+    <>
+    <li className='cart-item'>
+      <p>{name} - {quantity} x {currencyFormatter.format(price)}</p>
+    
+      <p className='cart-item-actions'>
+        <button onClick={onDecrease}>-</button>
+        <span>{quantity}</span>
+        <button onClick={onIncrease}>+</button>
+      </p>
+    </li>
+    </>
   )
 }
 
-export default CartItems
+export default CartItem

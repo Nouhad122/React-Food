@@ -60,7 +60,6 @@ export const CartContextProvider = ({ children }) => {
     addItem,
     removeItem
    };
-   console.log(cartCtxtValue.items);
 
   return (
     <CartContext.Provider value={cartCtxtValue}>
