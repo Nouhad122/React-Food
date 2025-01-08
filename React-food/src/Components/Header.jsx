@@ -1,5 +1,6 @@
 import React from 'react';
 import logo from "../assets/logo.jpg";
+import Button from './Button';
 
 const Header = () => {
   return (
@@ -10,7 +11,7 @@ const Header = () => {
         </div>
         
         <nav>
-            <button>Cart (0)</button>
+          <Button textOnly>Cart (0)</Button>
         </nav>
       
     </header>
