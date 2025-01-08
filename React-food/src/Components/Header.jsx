@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import logo from "../assets/logo.jpg";
 import Button from './Button';
+import CartContext from '../store/CartContext';
+import UserProgressContext from '../store/UserProgressContext';
 
 const Header = () => {
+  const cartCtxt = useContext(CartContext);
+  const userProgressCtxt = useContext(UserProgressContext);
+
+    const handleOpenModal = () =>{
+        userProgressCtxt.showModal();
+    }
+  const totalCartItems = cartCtxt.items.reduce((totalItemsInCart, item) => {
+    return totalItemsInCart + item.quantity
+  }, 0);
   return (
     <header id='main-header'>
         <div id='title'>
@@ -11,7 +22,7 @@ const Header = () => {
         </div>
         
         <nav>
-          <Button textOnly>Cart (0)</Button>
+          <Button textOnly onClick={handleOpenModal}>Cart ({totalCartItems})</Button>
         </nav>
       
     </header>
