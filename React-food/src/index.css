@@ -260,3 +260,11 @@ h1 {
     transform: translateY(0);
   }
 }
+.error{
+  background-color: rgba(255, 0, 0, 0.692);
+  text-align: center;
+  padding: 10px;
+}
+.center{
+  text-align: center;
+}
