@@ -6,6 +6,7 @@ import UserProgressContext from '../store/UserProgressContext';
 import Modal from './Modal';
 import Input from './Input';
 import useHttp from '../Hooks/useHttp';
+import { useActionState } from 'react';
 
 const requestConfig = {
     method: "POST",
@@ -19,7 +20,7 @@ const Checkout = () => {
     const cartCtxt= useContext(CartContext);
     const userProgressCtxt = useContext(UserProgressContext);
 
-    const {data, isLoading, error, sendRequest, clearData} = useHttp("http://localhost:3000/orders", requestConfig);
+    const {data, error, sendRequest, clearData} = useHttp("http://localhost:3000/orders", requestConfig);
 
     const totalCartPrice = cartCtxt.items.reduce((totalPrice, item) =>totalPrice + (item.price * item.quantity), 0);
 
@@ -33,18 +34,19 @@ const Checkout = () => {
         clearData();
     }
 
-    const handleFormSubmission = async (event) =>{
-        event.preventDefault();
-        const fd = new FormData(event.target);
+    const checkoutAction = async (prevState, fd) =>{
         const customerData = Object.fromEntries(fd.entries());
 
-        sendRequest(JSON.stringify({
+        await sendRequest(JSON.stringify({
             order:{
                 items: cartCtxt.items,
                 customer: customerData
             }
         }));   
     }
+
+    const [formState, formAction, pending] = useActionState(checkoutAction, null)
+
     if(data && !error){
         return (
         <Modal
@@ -64,7 +66,7 @@ const Checkout = () => {
      open={userProgressCtxt.progress === "checkout"}
      onClose={handleCloseModal}
      >
-        <form onSubmit={handleFormSubmission}>
+        <form action={formAction}>
             <h2>Checkout</h2>
             <p>Total Amount: {currencyFormatter.format(totalCartPrice)}</p>
 
@@ -78,13 +80,13 @@ const Checkout = () => {
 
             <p className='modal-actions'>
                 {
-                    !isLoading && !error &&
+                    !pending && !error &&
                     <>
                       <Button type="button" textOnly onClick={handleCloseModal}>Close</Button>
                       <Button>Submit Order</Button>
                     </>
                 }
-                    { isLoading && <>Submitting the form...</> }
+                    { pending && <>Submitting the form...</> }
                     { error && <>{error}</>} 
                 </p>
             
